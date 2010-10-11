@@ -8,6 +8,10 @@ requires 'DBIx::Connector';
 requires 'SQL::Abstract::Limit';
 requires 'SQL::Abstract::Plugin::InsertMulti';
 requires 'Class::Accessor::Fast';
+requires 'Try::Tiny';
+requires 'parent';
+requires 'Data::Util';
+requires 'Object::Container';
 
 test_requires 'Test::mysqld';
 test_requires 'Test::Fixture::DBI';
