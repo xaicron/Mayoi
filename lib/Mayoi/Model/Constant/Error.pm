@@ -1,0 +1,22 @@
+package Mayoi::Model::Constant::Error;
+
+use Exporter 'import';
+use HTTP::Status qw/:constants/;
+
+our @EXPORT_OK = qw(
+    BAD_REQUEST UNAUTHORIZED FORBIDDEN NOT_FOUND METHOD_NOT_ALLOWED
+    INTERNAL_SERVER_ERROR SERVICE_UNAVAILABLE
+);
+our %EXPORT_TAGS = (
+    all => [@EXPORT_OK],
+);
+
+sub BAD_REQUEST           () { HTTP_BAD_REQUEST }
+sub UNAUTHORIZED          () { HTTP_UNAUTHORIZED }
+sub FORBIDDEN             () { HTTP_FORBIDDEN }
+sub NOT_FOUND             () { HTTP_NOT_FOUND }
+sub METHOD_NOT_ALLOWED    () { HTTP_METHOD_NOT_ALLOWED }
+sub INTERNAL_SERVER_ERROR () { HTTP_INTERNAL_SERVER_ERROR }
+sub SERVICE_UNAVAILABLE   () { HTTP_SERVICE_UNAVAILABLE }
+
+1;

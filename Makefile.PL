@@ -12,6 +12,7 @@ requires 'Try::Tiny';
 requires 'parent';
 requires 'Data::Util';
 requires 'Object::Container';
+requires 'HTTP::Status';
 
 test_requires 'Test::mysqld';
 test_requires 'Test::Fixture::DBI';
