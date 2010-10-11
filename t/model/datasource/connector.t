@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Exception;
-use Mayoi::Model;
+use Mayoi::Model::DataSource;
 
-my $model = Mayoi::Model->new;
+my $model = Mayoi::Model::DataSource->new;
 
 dies_ok {
    $model->connector('foo'); 

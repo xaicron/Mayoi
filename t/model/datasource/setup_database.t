@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Exception;
-use Mayoi::Model;
+use Mayoi::Model::DataSource;
 
-my $model = Mayoi::Model->new;
+my $model = Mayoi::Model::DataSource->new;
 
 lives_ok {
     $model->setup_database({

@@ -1,4 +1,4 @@
-package Mayoi::Model;
+package Mayoi::Model::DataSource;
 
 use DBI;
 use DBIx::Connector;
