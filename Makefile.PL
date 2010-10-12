@@ -14,6 +14,8 @@ requires 'Data::Util';
 requires 'Object::Container';
 requires 'HTTP::Status';
 requires 'Config::Any';
+requires 'String::Random';
+requires 'Path::Class';
 
 test_requires 'Test::mysqld';
 test_requires 'Test::Fixture::DBI';
