@@ -13,6 +13,7 @@ requires 'parent';
 requires 'Data::Util';
 requires 'Object::Container';
 requires 'HTTP::Status';
+requires 'Config::Any';
 
 test_requires 'Test::mysqld';
 test_requires 'Test::Fixture::DBI';
