@@ -11,8 +11,11 @@ $DBIx::DBHResolver::DBI = 'DBIx::Connector';
 $DBIx::DBHResolver::DBI_CONNECT_METHOD = 'new';
 $DBIx::DBHResolver::DBI_CONNECT_CACHED_METHOD = 'new';
 
+__PACKAGE__->mk_accessors(qw/resolver/);
+
 sub new {
     my ($class, %args) = @_;
+    $args{resolver} = 'DBIx::DBHResolver';
     return $class->SUPER::new(\%args);
 }
 
@@ -20,10 +23,6 @@ my $container = {};
 
 sub sql {
     $container->{sql} ||= SQL::Abstract::Limit->new(limit_dialect => 'LimitXY');
-}
-
-sub resolver {
-    $container->{resolver} ||= DBIx::DBHResolver->new;
 }
 
 sub setup_database {
