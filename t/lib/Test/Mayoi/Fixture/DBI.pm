@@ -43,8 +43,8 @@ sub setup_fixture {
 
     for my $config (@configs) {
         construct_fixture(
-            dbh     => $class->dbh($config->{node}),
-            fixture => $config->{fixture},
+            dbh     => $config->{dbh} || $class->dbh($config->{node}),
+            fixture => $config->{fixtures},
         );
     }
 }
