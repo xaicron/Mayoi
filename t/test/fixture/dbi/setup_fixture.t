@@ -20,8 +20,8 @@ my $db = Test::Mayoi::Fixture::DBI->setup_database(
 lives_ok {
     Test::Mayoi::Fixture::DBI->setup_fixture(
         {
-            node    => 'MASTER',
-            fixture => [
+            node     => 'MASTER',
+            fixtures => [
                 $test_dir->file('user_data_fixture.yaml')->stringify,
             ],
         },
