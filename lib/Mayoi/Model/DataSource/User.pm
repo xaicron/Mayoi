@@ -8,7 +8,7 @@ use Try::Tiny;
 use Mayoi::Exception;
 use Mayoi::Model::Constant::Error qw/:all/;
 
-sub get_uesr_data {
+sub get_user_data {
     my ($self, $params) = @_;
     my ($user_id) = @$params{qw/user_id/};
 
@@ -17,8 +17,8 @@ sub get_uesr_data {
             my $dbh = shift;
             my ($stmt, @bind) = $self->sql->select(
                 'user_data',
-                [qw/name nickname/],
-                { 
+                [qw/id name/],
+                {
                     id       => $user_id,
                     disabled => 0,
                 },
@@ -33,6 +33,13 @@ sub get_uesr_data {
             message => "$e",
         );
     };
+
+    unless ($row) {
+        Mayoi::Exception->throw(
+            code    => NOT_FOUND,
+            message => sprintf('user not found (user_id: %d)', $user_id),
+        );
+    }
 
     return $row;
 }
