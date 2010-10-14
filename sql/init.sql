@@ -30,6 +30,7 @@ CREATE TABLE `tweet` (
     `is_public` tinyint(4) NOT NULL DEFAULT 1,
     `disabled` tinyint(4) NOT NULL DEFAULT 0,
     `created_on` int(10) NOT NULL,
+    `updated_on` int(10) NOT NULL,
     INDEX index_user_id (user_id),
     INDEX index_user_id_created_on (user_id, created_on),
     INDEX index_user_id_is_public (user_id, is_public)
