@@ -45,3 +45,21 @@ $ds->connector('MASTER')->txn(fixup => sub {
     $dbh->commit;
 });
 
+$ds->connector('MASTER')->txn(fixup => sub {
+    my $dbh = shift;
+    my $create_data = [];
+    for my $id (1..100) {
+        push @$create_data, {
+            id         => $id,
+            user_id    => 1,
+            tweet      => $rand->randregex('[A-Za-z0-9_]{12}'),
+            created_on => \'UNIX_TIMESTAMP()',
+            updated_on => \'UNIX_TIMESTAMP()',
+        };
+    }
+    my ($stmt, @bind) = $ds->sql->insert_multi('tweet', $create_data);
+    $dbh->do($stmt, undef, @bind);
+    $dbh->commit;
+});
+
+__END__
