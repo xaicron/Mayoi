@@ -1,7 +1,7 @@
 --- 
 - 
-  data: "CREATE TABLE `friend` (\n  `user_id` bigint(20) NOT NULL,\n  `target_id` bigint(20) NOT NULL,\n  `disabled` tinyint(4) NOT NULL DEFAULT '0',\n  `created_on` int(10) NOT NULL,\n  `updated_on` int(10) NOT NULL,\n  PRIMARY KEY (`user_id`),\n  KEY `index_target_id` (`target_id`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
-  schema: friend
+  data: "CREATE TABLE `following` (\n  `user_id` bigint(20) NOT NULL,\n  `target_id` bigint(20) NOT NULL,\n  `disabled` tinyint(4) NOT NULL DEFAULT '0',\n  `created_on` int(10) NOT NULL,\n  `updated_on` int(10) NOT NULL,\n  UNIQUE KEY `index_following` (`target_id`,`user_id`),\n  KEY `index_user_id_created_on` (`user_id`,`created_on`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
+  schema: following
 - 
   data: "CREATE TABLE `seq_tweet` (\n  `id` bigint(20) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: seq_tweet
@@ -9,8 +9,18 @@
   data: "CREATE TABLE `seq_user_data` (\n  `id` bigint(20) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: seq_user_data
 - 
-  data: "CREATE TABLE `tweet` (\n  `id` bigint(20) NOT NULL,\n  `user_id` bigint(20) NOT NULL,\n  `tweet` char(140) NOT NULL,\n  `is_public` tinyint(4) DEFAULT '1',\n  `created_on` int(10) NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `index_user_id` (`user_id`),\n  KEY `index_user_id_created_on` (`user_id`,`created_on`),\n  KEY `index_user_id_is_public` (`user_id`,`is_public`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
+  data: "CREATE TABLE `tweet` (\n  `id` bigint(20) NOT NULL,\n  `user_id` bigint(20) NOT NULL,\n  `tweet` char(140) NOT NULL,\n  `is_public` tinyint(4) NOT NULL DEFAULT '1',\n  `disabled` tinyint(4) NOT NULL DEFAULT '0',\n  `created_on` int(10) NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `index_user_id` (`user_id`),\n  KEY `index_user_id_created_on` (`user_id`,`created_on`),\n  KEY `index_user_id_is_public` (`user_id`,`is_public`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: tweet
 - 
   data: "CREATE TABLE `user_data` (\n  `id` bigint(20) NOT NULL,\n  `name` char(24) NOT NULL,\n  `disabled` tinyint(4) NOT NULL DEFAULT '0',\n  `created_on` int(10) NOT NULL,\n  `updated_on` int(10) NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `index_name` (`name`),\n  KEY `index_created_on` (`created_on`)\n) ENGINE=MyISAM DEFAULT CHARSET=utf8"
   schema: user_data
+- 
+  data: "CREATE PROCEDURE `disable_all_following`( IN a_user_id BIGINT )\nBEGIN\n        UPDATE following SET disabled = 1 WHERE user_id = a_user_id;\n    END"
+  procedure: disable_all_following
+- 
+  data: "CREATE PROCEDURE `disable_all_tweet`( IN a_user_id BIGINT )\nBEGIN\n        UPDATE tweet SET disabled = 1 WHERE user_id = a_user_id;\n    END"
+  procedure: disable_all_tweet
+- 
+  data: "CREATE TRIGGER `disable_all_user_data_on_disabled_user_data` AFTER UPDATE ON `user_data`\n    FOR EACH ROW BEGIN\n        IF ( NEW.disabled <> 0 ) THEN\n            CALL disable_all_following( NEW.id );\n            CALL disable_all_tweet( NEW.id );\n        END IF;\n    END"
+  refer: user_data
+  trigger: disable_all_user_data_on_disabled_user_data
