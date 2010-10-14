@@ -13,7 +13,7 @@ sub get_user_data {
     my ($user_id) = @$params{qw/user_id/};
 
     my $row = try {
-        $self->connector('USER_SLAVE', $user_id)->run(fixup => sub {
+        $self->connector('SLAVE', $user_id)->run(fixup => sub {
             my $dbh = shift;
             my ($stmt, @bind) = $self->sql->select(
                 'user_data',
