@@ -22,7 +22,7 @@ test_requires 'Test::Fixture::DBI';
 test_requires 'Test::More', 0.96;
 test_requires 'Test::Exception';
 
-tests_recursive 't';
+tests join q{ }, map { sprintf 't%s.t', '/*' x $_ } 1..5;
 author_tests 'xt';
 
 auto_include();
