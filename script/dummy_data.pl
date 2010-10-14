@@ -13,7 +13,7 @@ my $rand = String::Random->new;
 my $ds = Mayoi::Model::DataSource->new;
 $ds->setup_database($config);
 
-$ds->connector('USER_MASTER')->txn(fixup => sub {
+$ds->connector('MASTER')->txn(fixup => sub {
     my $dbh = shift;
     my $create_data = [];
     for my $id (1..1000) {
@@ -25,6 +25,22 @@ $ds->connector('USER_MASTER')->txn(fixup => sub {
         },
     }
     my ($stmt, @bind) = $ds->sql->insert_multi('user_data', $create_data);
+    $dbh->do($stmt, undef, @bind);
+    $dbh->commit;
+});
+
+$ds->connector('MASTER')->txn(fixup => sub {
+    my $dbh = shift;
+    my $create_data = [];
+    for my $id (2..5) {
+        push @$create_data, {
+            user_id    => 1,
+            target_id  => $id,
+            created_on => \'UNIX_TIMESTAMP()',
+            updated_on => \'UNIX_TIMESTAMP()',
+        };
+    }
+    my ($stmt, @bind) = $ds->sql->insert_multi('following', $create_data);
     $dbh->do($stmt, undef, @bind);
     $dbh->commit;
 });
