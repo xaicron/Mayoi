@@ -13,14 +13,14 @@ my $test_dir = dir(__FILE__)->parent->subdir('get_user');
 my $db = Test::Mayoi::Fixture::DBI->setup_database(
     {
         database => 'mayoi',
-        node     => [qw/USER_MASTER USER_SLAVE/],
+        node     => [qw/MASTER SLAVE/],
         schema   => [qw/user_data/],
     },
 );
 
 Test::Mayoi::Fixture::DBI->setup_fixture(
     {
-        node     => 'USER_MASTER',
+        node     => 'MASTER',
         fixtures => [
             $test_dir->file('user_data_fixture.yaml')->stringify,
         ],
