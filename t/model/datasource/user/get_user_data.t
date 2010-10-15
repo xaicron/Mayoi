@@ -8,7 +8,7 @@ use Path::Class;
 
 use Mayoi::Model::DataSource::User;
 
-my $test_dir = dir(__FILE__)->parent->subdir('get_user');
+my $test_dir = dir(__FILE__)->parent->subdir('get_user_data');
 
 my $db = Test::Mayoi::Fixture::DBI->setup_database(
     {
