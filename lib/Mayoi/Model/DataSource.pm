@@ -25,6 +25,18 @@ sub sql {
     $container->{sql} ||= SQL::Abstract::Limit->new(limit_dialect => 'LimitXY');
 }
 
+sub next_seq {
+    my ($self, $node, $dbname) = @_;
+    my $seq = $self->connector($node)->txn(fixup => sub {
+        my $dbh = shift;
+        my $seq = $dbh->do("UPDATE $dbname SET id = id + 1");
+        $dbh->commit;
+        return $seq;
+    });
+
+    return $seq;
+}
+
 sub setup_database {
     my ($self, $config) = @_;
     $self->resolver->config($config);
