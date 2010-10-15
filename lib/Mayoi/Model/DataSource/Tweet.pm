@@ -40,7 +40,7 @@ sub new_tweet {
         });
     }
     catch {
-        my $e = shift;
+        my $e = $_;
         $e->rethrow if ref $e eq 'Mayoi::Exception';
         Mayoi::Exception->throw(
             code    => INTERNAL_SERVER_ERROR,
