@@ -2,7 +2,7 @@ package Test::Mayoi::Fixture::DBI;
 use strict;
 use warnings;
 use Test::Mayoi::DB;
-use Test::Fixture::DBI;
+use Test::Fixture::DBI qw(:all);
 use DBIx::DBHResolver;
 
 our $SCHEMA_BASE_DIR  = 't/schema';
@@ -17,7 +17,7 @@ sub setup_database {
         my $dbname = $config->{database};
         create_database($db, $dbname);
 
-        my $database_yaml = sprintf '%s/%s.yaml', $SCHEMA_BASE_DIR, $dbname;
+        my $database_yaml = _database_yaml($dbname);
         construct_database(
             dbh      => $db->dbh({dbname => $dbname}, { AutoCommit => 1 }),
             database => $database_yaml,
@@ -47,6 +47,22 @@ sub setup_fixture {
             fixture => $config->{fixtures},
         );
     }
+}
+
+sub setup_trigger {
+    my ($class, @configs) = @_;
+
+    for my $config (@configs) {
+        construct_trigger(
+            dbh      => $config->{dbh} || $class->dbh($config->{node}),
+            database => _database_yaml($config->{database}),
+        );
+    }
+}
+
+sub _database_yaml {
+    my ($dbname) = @_;
+    return sprintf '%s/%s.yaml', $SCHEMA_BASE_DIR, $dbname;
 }
 
 #sub set_cluster {

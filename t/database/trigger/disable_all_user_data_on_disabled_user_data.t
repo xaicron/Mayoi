@@ -29,7 +29,11 @@ Test::Mayoi::Fixture::DBI->setup_fixture(
     },
 );
 
-Test::Mayoi::Fixture::DBI->setup_fixture(
+Test::Mayoi::Fixture::DBI->setup_trigger(
+    {
+        node     => 'MASTER',
+        database => 'mayoi',
+    },
 );
 
 my $ds = Mayoi::Model::DataSource->new;
@@ -79,7 +83,7 @@ sub _count {
     return $count;
 }
 
-sub test_trriger {
+sub test_trigger {
     my %specs = @_;
     my ($input, $expects, $desc) = @specs{qw/input expects desc/};
     my ($user_id, $disabled) = @$input{qw/user_id disabled/};
@@ -99,7 +103,7 @@ sub test_trriger {
     };
 }
 
-test_trriger(
+test_trigger(
     input => {
         user_id  => 1,
         disabled => 0,
@@ -111,7 +115,7 @@ test_trriger(
     desc => 'user_id: 1, disabled: 0',
 );
 
-test_trriger(
+test_trigger(
     input => {
         user_id  => 1,
         disabled => 1,
