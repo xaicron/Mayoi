@@ -62,4 +62,16 @@ $ds->connector('MASTER')->txn(fixup => sub {
     $dbh->commit;
 });
 
+$ds->connector('MASTER')->txn(fixup => sub {
+    my $dbh = shift;
+    $dbh->do('INSERT INTO seq_tweet(id) VALUES(0)');
+    $dbh->commit;
+});
+
+$ds->connector('MASTER')->txn(fixup => sub {
+    my $dbh = shift;
+    $dbh->do('INSERT INTO seq_user_data(id) VALUES(0)');
+    $dbh->commit;
+});
+
 __END__
