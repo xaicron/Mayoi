@@ -1,4 +1,5 @@
 use inc::Module::Install;
+use Module::Install::ExtendsMakeTest;
 name 'Mayoi';
 all_from 'lib/Mayoi.pm';
 
@@ -24,6 +25,18 @@ test_requires 'Test::Exception';
 
 tests join q{ }, map { sprintf 't%s.t', '/*' x $_ } 1..5;
 author_tests 'xt';
+
+replace_default_make_test(
+    includes         => ['t/lib'],
+    modules          => ['Test::Mayoi::DB'],
+    before_run_codes => [
+        sub {
+            $SIG{INT} = sub { CORE::exit 1 };
+            my $db = Test::Mayoi::DB->setup;
+            $ENV{MAYOI_TEST_MY_SOCKET} = $db->my_cnf->{socket};
+        },
+    ],
+);
 
 auto_include();
 auto_set_repository();

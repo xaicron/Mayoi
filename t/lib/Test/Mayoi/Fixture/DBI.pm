@@ -7,12 +7,20 @@ use DBIx::DBHResolver;
 
 our $SCHEMA_BASE_DIR  = 't/schema';
 our $AUTO_COMMIT_RULE = qr/(?:W|M|MASTER)$/i;
+our $SKIP_DROP_DB_MAP = {
+    information_schema => 1,
+    mysql              => 1,
+    test               => 1,
+};
 my $resolver = 'DBIx::DBHResolver';
 
 sub setup_database {
     my ($class, @configs) = @_;
     my $db = Test::Mayoi::DB->setup;
     
+    # for make test
+    _cleanup($db);
+
     for my $config (@configs) {
         my $dbname = $config->{database};
         create_database($db, $dbname);
@@ -36,6 +44,16 @@ sub setup_database {
     }
     
     return $db;
+}
+
+sub _cleanup {
+    my ($db) = @_;
+    my $dbh = $db->dbh({}, { AutoCommit => 1 });
+    my $rs = $dbh->selectall_hashref('SHOW DATABASES', 'Database');
+    for my $dbname (keys %$rs) {
+        next if $SKIP_DROP_DB_MAP->{$dbname};
+        $dbh->do("DROP DATABASE $dbname");
+    }
 }
 
 sub setup_fixture {
