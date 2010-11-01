@@ -60,8 +60,10 @@ sub setup_fixture {
     my ($class, @configs) = @_;
 
     for my $config (@configs) {
+        my $dbh = $config->{dbh} || $class->dbh($config->{node});
+        $dbh->{InactiveDestroy} = 1;
         construct_fixture(
-            dbh     => $config->{dbh} || $class->dbh($config->{node}),
+            dbh     => $dbh,
             fixture => $config->{fixtures},
         );
     }
@@ -71,8 +73,10 @@ sub setup_trigger {
     my ($class, @configs) = @_;
 
     for my $config (@configs) {
+        my $dbh = $config->{dbh} || $class->dbh($config->{node});
+        $dbh->{InactiveDestroy} = 1;
         construct_trigger(
-            dbh      => $config->{dbh} || $class->dbh($config->{node}),
+            dbh      => $dbh,
             database => _database_yaml($config->{database}),
         );
     }
